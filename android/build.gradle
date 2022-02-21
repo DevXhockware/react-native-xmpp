@@ -1,22 +1,22 @@
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.2.3'
+        classpath 'com.android.tools.build:gradle:7.1.1'
     }
 }
 
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    compileSdkVersion 31
+    buildToolsVersion "31.0.0"
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 22
+        minSdkVersion 24
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
     }
@@ -31,14 +31,14 @@ repositories {
 }
 
 dependencies {
-    compile "com.facebook.react:react-native:+"
-    compile "org.igniterealtime.smack:smack-android:4.1.0"
+    implementation "com.facebook.react:react-native:+"
+    implementation "org.igniterealtime.smack:smack-android:4.1.0"
     // Optional for XMPPTCPConnection
-    compile "org.igniterealtime.smack:smack-tcp:4.1.0"
+    implementation "org.igniterealtime.smack:smack-tcp:4.1.0"
     // Optional for XMPP-IM (RFC 6121) support (Roster, Threaded Chats, …)
-    compile "org.igniterealtime.smack:smack-im:4.1.0"
+    implementation "org.igniterealtime.smack:smack-im:4.1.0"
     // Optional for XMPP extensions support
-    compile "org.igniterealtime.smack:smack-extensions:4.1.0"
+    implementation "org.igniterealtime.smack:smack-extensions:4.1.0"
     // Support SCRAM-SHA-1
-    compile "org.igniterealtime.smack:smack-sasl-provided:4.1.0"
+    implementation "org.igniterealtime.smack:smack-sasl-provided:4.1.0"
 }
