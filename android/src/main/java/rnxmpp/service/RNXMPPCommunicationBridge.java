@@ -1,7 +1,5 @@
 package rnxmpp.service;
 
-import android.support.annotation.Nullable;
-
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableArray;
@@ -123,7 +121,7 @@ public class RNXMPPCommunicationBridge implements XmppServiceListener {
         sendEvent(reactContext, RNXMPP_LOGIN, params);
     }
 
-    void sendEvent(ReactContext reactContext, String eventName, @Nullable Object params) {
+    void sendEvent(ReactContext reactContext, String eventName, Object params) {
         reactContext
                 .getJSModule(RCTNativeAppEventEmitter.class)
                 .emit(eventName, params);
