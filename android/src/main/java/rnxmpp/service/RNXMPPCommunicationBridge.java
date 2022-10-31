@@ -1,4 +1,4 @@
-package rnxmpp.service;
+package com.rnxmpp.service;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
@@ -13,7 +13,7 @@ import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.roster.RosterGroup;
 
-import rnxmpp.utils.Parser;
+import com.rnxmpp.utils.Parser;
 
 /**
  * Created by Kristian Frølund on 7/19/16.
