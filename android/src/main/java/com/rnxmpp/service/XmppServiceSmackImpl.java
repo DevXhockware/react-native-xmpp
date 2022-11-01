@@ -1,4 +1,4 @@
-package rnxmpp.service;
+package com.rnxmpp.service;
 
 import com.facebook.react.bridge.ReadableArray;
 
@@ -25,7 +25,7 @@ import org.jivesoftware.smack.sasl.SASLErrorException;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smack.util.XmlStringBuilder;
-
+import org.jivesoftware.smack.SASLAuthentication;
 import android.os.AsyncTask;
 
 import java.io.IOException;
@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import rnxmpp.ssl.UnsafeSSLContext;
+import com.rnxmpp.ssl.UnsafeSSLContext;
 
 
 /**
@@ -68,15 +68,16 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         String[] serviceNameParts = jidParts[1].split("/");
         String serviceName = serviceNameParts[0];
 
-        XMPPTCPConnectionConfiguration.Builder confBuilder = XMPPTCPConnectionConfiguration.builder()
+        XMPPTCPConnectionConfiguration.Builder confBuilder = XMPPTCPConnectionConfiguration.builder()                
+                .allowEmptyOrNullUsernames()
                 .setServiceName(serviceName)
                 .setUsernameAndPassword(jidParts[0], password)
                 .setConnectTimeout(3000)
-                .allowEmptyOrNullUsernames()
                 //.setDebuggerEnabled(true)
-                .performSaslAnonymousAuthentication()
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
 
+      
+        //perform sa
         if (serviceNameParts.length>1){
             confBuilder.setResource(serviceNameParts[1]);
         } else {
@@ -91,6 +92,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         if (trustedHosts.contains(hostname) || (hostname == null && trustedHosts.contains(serviceName))){
             confBuilder.setCustomSSLContext(UnsafeSSLContext.INSTANCE.getContext());
         }
+        
         XMPPTCPConnectionConfiguration connectionConfiguration = confBuilder.build();
         connection = new XMPPTCPConnection(connectionConfiguration);
 
@@ -106,7 +108,9 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             @Override
             protected Void doInBackground(Void... params) {
                 try {
-                    connection.connect().login();
+                    
+                    connection.connect();
+                    connection.loginAnonymously(); 
                 } catch (XMPPException | SmackException | IOException e) {
                     logger.log(Level.SEVERE, "Could not login for user " + jidParts[0], e);
                     if (e instanceof SASLErrorException){
