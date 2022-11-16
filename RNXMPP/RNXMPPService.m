@@ -83,7 +83,7 @@ static DDLogLevel ddLogLevel = DDLogLevelInfo;
         //        If you do enableBackgroundingOnSocket on the simulator,
         //        you will simply see an error message from the xmpp stack when it fails to set the property.
 
-        xmppStream.enableBackgroundingOnSocket = YES;
+        xmppStream.enableBackgroundingOnSocket = NO;
     }
 #endif
 
