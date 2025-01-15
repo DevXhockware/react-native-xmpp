@@ -64,18 +64,42 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
 
     @Override
     public void connect(String jid, String password, String authMethod, String hostname, Integer port) {
+        // Log.d("ZEBRA", " "+jid+password+authMethod+hostname+port);
+
+
+        XMPPTCPConnectionConfiguration.Builder confBuilder = null;
+
         final String[] jidParts = jid.split("@");
         String[] serviceNameParts = jidParts[1].split("/");
         String serviceName = serviceNameParts[0];
 
-        XMPPTCPConnectionConfiguration.Builder confBuilder = XMPPTCPConnectionConfiguration.builder()                
+        boolean isCredentialsLogin = !jidParts[0].equals("anonymous");
+
+        // Log.d("ZEBRA", "isCredentialsLogin "+isCredentialsLogin);
+        // Log.d("ZEBRA", "jidParts[0] "+jidParts[0]+"||");
+
+
+        if(isCredentialsLogin){
+
+
+            confBuilder = XMPPTCPConnectionConfiguration.builder()                
+                    // .allowEmptyOrNullUsernames()
+                    .setServiceName(serviceName)
+                    .setUsernameAndPassword(jidParts[0], password)
+                    .setConnectTimeout(3000)
+                    //.setDebuggerEnabled(true)
+                    // .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
+                    .setSecurityMode(ConnectionConfiguration.SecurityMode.required);
+        }
+        else{
+            confBuilder = XMPPTCPConnectionConfiguration.builder()                
                 .allowEmptyOrNullUsernames()
                 .setServiceName(serviceName)
                 .setUsernameAndPassword(jidParts[0], password)
                 .setConnectTimeout(3000)
                 //.setDebuggerEnabled(true)
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
-
+        }
       
         //perform sa
         if (serviceNameParts.length>1){
@@ -108,9 +132,13 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             @Override
             protected Void doInBackground(Void... params) {
                 try {
-                    
-                    connection.connect();
-                    connection.loginAnonymously(); 
+                    if(isCredentialsLogin){
+                        connection.connect().login();
+                    }
+                    else{
+                        connection.connect();
+                        connection.loginAnonymously(); 
+                    }
                 } catch (XMPPException | SmackException | IOException e) {
                     logger.log(Level.SEVERE, "Could not login for user " + jidParts[0], e);
                     if (e instanceof SASLErrorException){
