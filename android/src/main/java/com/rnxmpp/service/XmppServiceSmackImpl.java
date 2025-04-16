@@ -34,10 +34,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.rnxmpp.ssl.UnsafeSSLContext;
-import java.security.*;
-import java.nio.charset.StandardCharsets;
-
+import java.util.UUID;
 /**
  * Created by Kristian Frølund on 7/19/16.
  * Copyright (c) 2016. Teletronics. All rights reserved
@@ -94,13 +91,8 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         }
         else{
 
-            String anon = "anonymous";
-            byte[] bytesOfMessage = anon.getBytes("UTF-8");
+            String username = UUID.randomUUID().toString();
 
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] theMD5digest = md.digest(bytesOfMessage);
-
-            String username = new String(theMD5digest, StandardCharsets.UTF_8);
             
             confBuilder = XMPPTCPConnectionConfiguration.builder()                
                 .allowEmptyOrNullUsernames()
