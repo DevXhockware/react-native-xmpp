@@ -35,7 +35,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.rnxmpp.ssl.UnsafeSSLContext;
-
+import java.security.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Created by Kristian Frølund on 7/19/16.
@@ -92,10 +93,19 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
                     .setSecurityMode(ConnectionConfiguration.SecurityMode.required);
         }
         else{
+
+            String anon = "anonymous";
+            byte[] bytesOfMessage = anon.getBytes("UTF-8");
+
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] theMD5digest = md.digest(bytesOfMessage);
+
+            String username = new String(theMD5digest, StandardCharsets.UTF_8);
+            
             confBuilder = XMPPTCPConnectionConfiguration.builder()                
                 .allowEmptyOrNullUsernames()
                 .setServiceName(serviceName)
-                .setUsernameAndPassword(jidParts[0], password)
+                .setUsernameAndPassword(username, "")
                 .setConnectTimeout(3000)
                 //.setDebuggerEnabled(true)
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
