@@ -97,7 +97,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
             confBuilder = XMPPTCPConnectionConfiguration.builder()                
                 .allowEmptyOrNullUsernames()
                 .setServiceName(serviceName)
-                .setUsernameAndPassword(username, "")
+                .setUsernameAndPassword(username, password)
                 .setConnectTimeout(3000)
                 //.setDebuggerEnabled(true)
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled);
