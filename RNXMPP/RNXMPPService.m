@@ -265,7 +265,7 @@ static DDLogLevel ddLogLevel = DDLogLevelInfo;
     NSString *jidToUse = myJID;
     if (isAnonymous || myJID.length == 0) {
         NSString *randomUser = [[NSUUID UUID] UUIDString];
-        NSString *domain = hostname ?: @"yourdomain.com";
+        NSString *domain = hostname ?: @"xmpp.youbeep.com";
         jidToUse = [NSString stringWithFormat:@"%@@%@", randomUser, domain];
     }
 
