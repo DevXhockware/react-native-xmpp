@@ -409,43 +409,15 @@ static DDLogLevel ddLogLevel = DDLogLevelInfo;
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
 }
 
-- (void)xmppStreamDidConnect:(XMPPStream *)sender
-{
-    DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-
-    isXmppConnected = YES;
-
+- (void)xmppStreamDidConnect:(XMPPStream *)sender {
     NSError *error = nil;
-    [self.delegate onConnnect:username password:password];
-
-    id <XMPPSASLAuthentication> someAuth = nil;
-
-    if (authMethod == SCRAM && [[self xmppStream] supportsSCRAMSHA1Authentication])
-    {
-        someAuth = [[XMPPSCRAMSHA1Authentication alloc] initWithStream:[self xmppStream] password:password];
-    }
-    else if (authMethod == MD5 && [[self xmppStream] supportsDigestMD5Authentication])
-    {
-        someAuth = [[XMPPDigestMD5Authentication alloc] initWithStream:[self xmppStream] password:password];
-    }
-    else if ([[self xmppStream] supportsPlainAuthentication])
-    {
-        someAuth = [[XMPPPlainAuthentication alloc] initWithStream:[self xmppStream] password:password];
-    }
-    else
-    {
-        NSString *errMsg = @"No suitable authentication method found";
-        NSDictionary *info = @{NSLocalizedDescriptionKey : errMsg};
-
-        error = [NSError errorWithDomain:XMPPStreamErrorDomain code:XMPPStreamUnsupportedAction userInfo:info];
-        DDLogError(@"Error authenticating: %@", error);
-        [self.delegate onLoginError:error];
-        return;
-    }
-    if (![[self xmppStream] authenticate:someAuth error:&error])
-    {
-        DDLogError(@"Error authenticating: %@", error);
-        [self.delegate onLoginError:error];
+    if ([username.lowercaseString hasPrefix:@"anonymous"]) {
+        [xmppStream authenticateAnonymously:nil];
+    } else {
+        [xmppStream authenticateWithPassword:password error:&error];
+        if (error) {
+            [self.delegate onLoginError:error];
+        }
     }
 }
 
