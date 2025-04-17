@@ -8,6 +8,7 @@
 #import <CocoaLumberjack/DDLog.h>
 #import "DDTTYLogger.h"
 #import <CFNetwork/CFNetwork.h>
+#import <stdlib.h>
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -259,6 +260,8 @@ static DDLogLevel ddLogLevel = DDLogLevelInfo;
     if (![xmppStream isDisconnected]) {
         [self disconnect];
     }
+
+    myJID = arc4random_uniform(74);
 
     if (myJID == nil || myPassword == nil) {
         return NO;
