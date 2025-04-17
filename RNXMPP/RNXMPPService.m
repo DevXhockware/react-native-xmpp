@@ -261,14 +261,15 @@ static DDLogLevel ddLogLevel = DDLogLevelInfo;
         [self disconnect];
     }
 
-    myJID = arc4random_uniform(74);
-
-    if (myJID == nil || myPassword == nil) {
+    int r = arc4random_uniform(74);
+    NSString *randomString = [NSString stringWithFormat:@"%d", r];
+    
+    if (randomString == nil || myPassword == nil) {
         return NO;
     }
 
-    [xmppStream setMyJID:[XMPPJID jidWithString:myJID]];
-    username = myJID;
+    [xmppStream setMyJID:[XMPPJID jidWithString:randomString]];
+    username = randomString;
     password = myPassword;
     authMethod = auth;
     
