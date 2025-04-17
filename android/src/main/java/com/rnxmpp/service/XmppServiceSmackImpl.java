@@ -93,7 +93,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         }
         else{
             confBuilder = XMPPTCPConnectionConfiguration.builder()                
-                .allowEmptyOrNullUsernames()
+                //.allowEmptyOrNullUsernames()
                 .setServiceName(serviceName)
                 .setUsernameAndPassword(jidParts[0], password)
                 .setConnectTimeout(3000)
