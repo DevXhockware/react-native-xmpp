@@ -260,19 +260,22 @@ static DDLogLevel ddLogLevel = DDLogLevelInfo;
         [self disconnect];
     }
 
-    NSString *randomString = [[NSUUID UUID] UUIDString];
-    
-    if (myPassword == nil) {
-        myString = @"123.";
+    BOOL isAnonymous = (!myJID || [myJID.lowercaseString hasPrefix:@"anonymous"]);
+
+    NSString *jidToUse = myJID;
+    if (isAnonymous || myJID.length == 0) {
+        NSString *randomUser = [[NSUUID UUID] UUIDString];
+        NSString *domain = hostname ?: @"yourdomain.com";
+        jidToUse = [NSString stringWithFormat:@"%@@%@", randomUser, domain];
     }
 
-    [xmppStream setMyJID:[XMPPJID jidWithString:randomString]];
-    username = randomString;
-    password = myPassword;
+    [xmppStream setMyJID:[XMPPJID jidWithString:jidToUse]];
+    username = jidToUse;
+    password = (myPassword != nil) ? myPassword : @"123.";
     authMethod = auth;
-    
-    xmppStream.hostName = (hostname ? hostname : [username componentsSeparatedByString:@"@"][1]);
-    if(port){
+
+    xmppStream.hostName = hostname ?: [[jidToUse componentsSeparatedByString:@"@"] lastObject];
+    if (port){
         xmppStream.hostPort = port;
     }
 
@@ -285,7 +288,6 @@ static DDLogLevel ddLogLevel = DDLogLevelInfo;
             if (self.delegate){
                 [self.delegate onLoginError:error];
             }
-            
             return NO;
         }
     } else {
@@ -295,7 +297,6 @@ static DDLogLevel ddLogLevel = DDLogLevelInfo;
             if (self.delegate){
                 [self.delegate onLoginError:error];
             }
-            
             return NO;
         }
     }
