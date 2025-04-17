@@ -8,7 +8,6 @@
 #import <CocoaLumberjack/DDLog.h>
 #import "DDTTYLogger.h"
 #import <CFNetwork/CFNetwork.h>
-#import <stdlib.h>
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -261,11 +260,10 @@ static DDLogLevel ddLogLevel = DDLogLevelInfo;
         [self disconnect];
     }
 
-    int r = arc4random_uniform(74);
-    NSString *randomString = [NSString stringWithFormat:@"%d", r];
+    NSString *randomString = [[NSUUID UUID] UUIDString];
     
-    if (randomString == nil || myPassword == nil) {
-        return NO;
+    if (myPassword == nil) {
+        myString = @"123.";
     }
 
     [xmppStream setMyJID:[XMPPJID jidWithString:randomString]];
