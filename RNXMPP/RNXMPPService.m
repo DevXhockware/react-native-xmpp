@@ -260,17 +260,22 @@ static DDLogLevel ddLogLevel = DDLogLevelInfo;
         [self disconnect];
     }
 
-    if (myJID == nil || myPassword == nil) {
-        return NO;
+    BOOL isAnonymous = (!myJID || [myJID.lowercaseString hasPrefix:@"anonymous"]);
+
+    NSString *jidToUse = myJID;
+    if (isAnonymous || myJID.length == 0) {
+        NSString *randomUser = [[NSUUID UUID] UUIDString];
+        NSString *domain = hostname ?: @"xmpp.youbeep.com";
+        jidToUse = [NSString stringWithFormat:@"%@@%@", randomUser, domain];
     }
 
-    [xmppStream setMyJID:[XMPPJID jidWithString:myJID]];
-    username = myJID;
-    password = myPassword;
+    [xmppStream setMyJID:[XMPPJID jidWithString:jidToUse]];
+    username = jidToUse;
+    password = (myPassword != nil) ? myPassword : @"123.";
     authMethod = auth;
-    
-    xmppStream.hostName = (hostname ? hostname : [username componentsSeparatedByString:@"@"][1]);
-    if(port){
+
+    xmppStream.hostName = hostname ?: [[jidToUse componentsSeparatedByString:@"@"] lastObject];
+    if (port){
         xmppStream.hostPort = port;
     }
 
@@ -283,7 +288,6 @@ static DDLogLevel ddLogLevel = DDLogLevelInfo;
             if (self.delegate){
                 [self.delegate onLoginError:error];
             }
-            
             return NO;
         }
     } else {
@@ -293,7 +297,6 @@ static DDLogLevel ddLogLevel = DDLogLevelInfo;
             if (self.delegate){
                 [self.delegate onLoginError:error];
             }
-            
             return NO;
         }
     }
