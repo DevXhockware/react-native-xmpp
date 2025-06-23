@@ -50,6 +50,7 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
     Roster roster;
     List<String> trustedHosts = new ArrayList<>();
     String password;
+    String xmppInstance = Long.toHexString(Double.doubleToLongBits(Math.random()));
 
     public XmppServiceSmackImpl(XmppServiceListener xmppServiceListener) {
         this.xmppServiceListener = xmppServiceListener;
@@ -102,11 +103,14 @@ public class XmppServiceSmackImpl implements XmppService, ChatManagerListener, S
         }
       
         //perform sa
-        if (serviceNameParts.length>1){
-            confBuilder.setResource(serviceNameParts[1]);
-        } else {
-            confBuilder.setResource(Long.toHexString(Double.doubleToLongBits(Math.random())));
-        }
+        //if (serviceNameParts.length>1){
+        //    confBuilder.setResource(serviceNameParts[1]);
+        //} else {
+        //    confBuilder.setResource(Long.toHexString(Double.doubleToLongBits(Math.random())));
+        //}
+
+        confBuilder.setResource(xmppInstance);
+
         if (hostname != null){
             confBuilder.setHost(hostname);
         }
