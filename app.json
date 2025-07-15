@@ -1,0 +1,5 @@
+{
+  "expo": {
+    "plugins": ["react-native-xmpp"]
+  }
+}
