@@ -11,6 +11,12 @@
     "type": "git",
     "url": "git+https://github.com/aksonov/react-native-xmpp.git"
   },
+  "react-native": {
+    "plugin": "./plugin-rnxmpp.js"
+  },
+  "expo": {
+    "plugins": ["./plugin-rnxmpp.js"]
+  },
   "keywords": [
     "xmpp",
     "react-native",
