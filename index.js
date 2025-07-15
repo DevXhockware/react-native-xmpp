@@ -2,26 +2,6 @@
 
 import { Platform, NativeModules, NativeEventEmitter } from 'react-native';
 
-if (Platform.OS === 'web') {
-  console.warn('react-native-xmpp is not supported on web');
-  const stub = {
-    connect: () => console.warn('XMPP connect not supported on web'),
-    message: () => {},
-    disconnect: () => {},
-    on: () => {},
-    removeListener: () => {},
-    removeListeners: () => {},
-    trustHosts: () => {},
-    sendStanza: () => {},
-    fetchRoster: () => {},
-    presence: () => {},
-    removeFromRoster: () => {},
-    disconnectAfterSending: () => {},
-  };
-  module.exports = stub;
-  return;
-}
-
 const RNXMPP = NativeModules.RNXMPP;
 const emitter = new NativeEventEmitter(RNXMPP);
 
